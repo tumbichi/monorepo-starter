@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/typescript-config/{{#if (eq kind "react")}}react{{else}}base{{/if}}.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true
+  },
+  "include": ["src"]
+}

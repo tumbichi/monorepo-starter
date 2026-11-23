@@ -1,0 +1,30 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "db:generate": "prisma generate --config prisma7.config.ts",
+    "db:push": "prisma db push --config prisma7.config.ts",
+    "db:studio": "prisma studio --config prisma7.config.ts",
+    "postinstall": "prisma generate --config prisma7.config.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "^8.23.1",
+    "dotenv": "^18.0.9",
+    "prisma": "7.10.1",
+    "typescript": "catalog:",
+    "@repo/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "7.10.1",
+    "pg": "^8.23.1"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./enums": "./lib/prisma/enums.ts"
+  },
+  "private": true
+}

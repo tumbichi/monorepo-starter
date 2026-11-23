@@ -1,0 +1,22 @@
+// Prisma schema: https://pris.ly/d/prisma-schema
+// Sin migraciones: el schema se sincroniza con `pnpm --filter @repo/db db:push`.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../lib/prisma"
+  // Imports with .ts extensions resolve in tsx, Turbopack and tsc alike;
+  // Turbopack does not map ".js" to ".ts".
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Modelo de ejemplo: reemplazalo por los tuyos.
+model Example {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,22 @@
+{
+  "name": "monorepo-starter",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "gen": "turbo gen"
+  },
+  "devDependencies": {
+    "@turbo/gen": "2.11.10",
+    "prettier": "3.9.6",
+    "turbo": "^2.11.10",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=26"
+  }
+}

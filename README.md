@@ -4,17 +4,54 @@ Base para proyectos nuevos: pnpm workspaces + Turborepo con los paquetes compart
 
 ## Crear un proyecto nuevo
 
+### Opción A: `create-turbo` (recomendada)
+
 ```bash
-pnpm dlx create-turbo@latest --example https://github.com/<usuario>/monorepo-starter mi-proyecto
+pnpm dlx create-turbo@latest --example https://github.com/<usuario>/monorepo-starter --package-manager pnpm mi-proyecto
 ```
 
-`create-turbo` copia el repo sin el historial de git, instala dependencias y hace el primer commit. Otras opciones: el botón **Use this template** de GitHub (marcando el repo como template en Settings) o `gh repo create mi-proyecto --template <usuario>/monorepo-starter --clone`.
+Copia el repo **sin el historial de git**, instala dependencias y hace el primer commit. Requiere que el repo del starter sea **público** en GitHub; si es privado, usá la opción B.
 
-Después de crear el proyecto:
+Para partir de una versión fija del starter (un tag o una rama), usá la URL completa: `https://github.com/<usuario>/monorepo-starter/tree/<tag-o-rama>`.
 
-1. Renombrá `name` en el `package.json` raíz, el `title` en `apps/web/app/layout.tsx` y la DB en `docker-compose.yml` y en los `.env.example`.
-2. Reemplazá `docs/ARCHITECTURE.md` y el modelo `Example` de `packages/db/prisma/schema.prisma` por los tuyos.
-3. Borrá lo que no uses: si no hay DB, eliminá `packages/db`, `docker-compose.yml` y `@repo/db` de `apps/web` (dependencia y `transpilePackages` en `next.config.ts`).
+### Opción B: template de GitHub
+
+Marcá el repo como template una sola vez (**Settings → General → Template repository**). Después:
+
+```bash
+gh repo create mi-proyecto --private --template <usuario>/monorepo-starter --clone
+cd mi-proyecto && pnpm install
+```
+
+O usá el botón **Use this template** en GitHub. Funciona con repos privados y crea el repo remoto en el mismo paso.
+
+## Checklist después de crear el proyecto
+
+**Identidad**
+
+- [ ] `name` en el `package.json` raíz.
+- [ ] `metadata` (`title`, `description`) en `apps/web/src/app/layout.tsx`.
+- [ ] Este README: reemplazá el título y la descripción, y borrá las secciones "Crear un proyecto nuevo" y "Checklist después de crear el proyecto".
+
+**Base de datos**
+
+- [ ] En `docker-compose.yml`, cambiá `POSTGRES_DB` y los puertos (`5439` de Postgres y `5051` de pgAdmin) por unos que no use otro proyecto tuyo. Si no, los contenedores de proyectos distintos chocan.
+- [ ] Actualizá `DATABASE_URL` en `apps/web/.env.example` y `packages/db/.env.example` con esa DB y ese puerto.
+- [ ] Reemplazá el modelo `Example` de `packages/db/prisma/schema.prisma` por los tuyos y creá la migración inicial: `pnpm --filter @repo/db db:migrate --name init`.
+
+**Docs**
+
+- [ ] `docs/DEPLOYMENT.md`: completá la tabla de variables de entorno y la lista de flujos críticos.
+- [ ] `AGENTS.md`: agregá lo propio del proyecto (dominio, reglas de negocio, integraciones externas).
+
+**Deploy**
+
+- [ ] Creá el proyecto en Vercel siguiendo `docs/DEPLOYMENT.md` → Configuración inicial.
+
+**Lo que no uses**
+
+- [ ] **Sin DB:** eliminá `packages/db` y `docker-compose.yml`, y en `apps/web` sacá `@repo/db` (de `package.json` y de `transpilePackages` en `next.config.ts`). Sacá también `db:deploy` de `apps/web/vercel.json` y `DATABASE_URL`/`DIRECT_URL` de `turbo.json`.
+- [ ] **Otra app en lugar de `web` (o además de ella):** `pnpm turbo gen workspace --copy`. Copiá también su `vercel.json` y cambiá el `--filter=web`.
 
 ## Stack
 
@@ -41,18 +78,20 @@ pnpm install                          # también genera el cliente de Prisma
 docker compose up -d                  # Postgres en localhost:5439 (+ pgAdmin en :5051)
 cp apps/web/.env.example apps/web/.env.local
 cp packages/db/.env.example packages/db/.env
-pnpm --filter @repo/db db:push        # sin migraciones: el schema se sincroniza con push
+pnpm --filter @repo/db db:migrate     # aplica las migraciones (la primera vez: crea la inicial)
 pnpm dev                              # http://localhost:3000
 ```
 
 ## Comandos
 
-| Comando | Qué hace |
-|---|---|
-| `pnpm dev` / `build` / `lint` / `check-types` | Tareas de Turborepo en todo el monorepo |
-| `pnpm --filter @repo/db db:generate` / `db:push` / `db:studio` | Prisma |
-| `pnpm gen package` | Crea `packages/<nombre>` (`@repo/<nombre>`, TypeScript o React) con tsconfig y ESLint compartidos |
-| `pnpm turbo gen workspace --copy` | Crea una app o paquete nuevo copiando uno existente (por ejemplo, otra app Next a partir de `apps/web`) |
+| Comando                                                         | Qué hace                                                                                                |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `pnpm dev` / `build` / `lint` / `check-types`                   | Tareas de Turborepo en todo el monorepo                                                                 |
+| `pnpm --filter @repo/db db:migrate`                             | Crea y aplica una migración a partir de los cambios del schema                                          |
+| `pnpm --filter @repo/db db:deploy`                              | Aplica las migraciones pendientes (producción, ver `docs/DEPLOYMENT.md`)                                |
+| `pnpm --filter @repo/db db:generate` / `db:reset` / `db:studio` | Prisma                                                                                                  |
+| `pnpm gen package`                                              | Crea `packages/<nombre>` (`@repo/<nombre>`, TypeScript o React) con tsconfig y ESLint compartidos       |
+| `pnpm turbo gen workspace --copy`                               | Crea una app o paquete nuevo copiando uno existente (por ejemplo, otra app Next a partir de `apps/web`) |
 
 ## UI
 

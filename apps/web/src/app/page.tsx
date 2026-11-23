@@ -11,7 +11,7 @@ export default function HomePage() {
         </Badge>
         <CardTitle>Todo listo</CardTitle>
         <CardDescription>
-          Next.js + <code>@repo/ui</code> funcionando. Editá <code>apps/web/app/page.tsx</code> para empezar.
+          Next.js + <code>@repo/ui</code> funcionando. Editá <code>apps/web/src/app/page.tsx</code> para empezar.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex gap-2">

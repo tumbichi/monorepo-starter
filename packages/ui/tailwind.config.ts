@@ -4,7 +4,7 @@ import animate from 'tailwindcss-animate';
 /**
  * Shared Tailwind preset. Apps consume it with:
  *   presets: [uiPreset],
- *   content: ['./app/**\/*.{ts,tsx}', '../../packages/ui/src/**\/*.{ts,tsx}'],
+ *   content: ['./src/**\/*.{ts,tsx}', '../../packages/ui/src/**\/*.{ts,tsx}'],
  */
 const config = {
   darkMode: ['class'],

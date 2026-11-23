@@ -1,5 +1,5 @@
 // Prisma schema: https://pris.ly/d/prisma-schema
-// Sin migraciones: el schema se sincroniza con `pnpm --filter @repo/db db:push`.
+// Después de cambiar el schema: `pnpm --filter @repo/db db:migrate` (crea y aplica la migración).
 
 generator client {
   provider            = "prisma-client"

@@ -37,3 +37,6 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+
+# Archivos de trabajo temporales (docs de otros proyectos)
+tmp/
